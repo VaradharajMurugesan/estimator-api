@@ -214,4 +214,4 @@ def delete_user1():
         return jsonify(e,"An ERROR occurred in table DELETE Method")
 
 if __name__ == '__main__':
- app.run(debug=True)
+    app.run()
