@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'estimator-api-test'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_89B9F24FDF5F457A99B94C4BBD3ABA6F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DC2C5EAB239D4CEB9F25276846DE3C61 }}
