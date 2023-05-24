@@ -131,7 +131,7 @@ def Get_allEst_tables():
    app.logger.error('An error occurred: %s', str(e))
    return jsonify(e,"An ERROR occurred in table BI_GET Method")
 
-@app.route('/Est_getbyid-Estimator/<int:BI_estimator_ID>', methods=['GET'])
+@app.route('/EstGetByID/<int:BI_estimator_ID>', methods=['GET'])
 def Get_ByID_Estimator(BI_estimator_ID):
   try:
       app.logger.info('BI_Get By_ID Process Starting')
@@ -192,11 +192,62 @@ def Get_ByID_Estimator(BI_estimator_ID):
   except Exception as e:
    app.logger.error('An error occurred: %s', str(e))
    return jsonify(e,"An ERROR occurred in table BI_GET_BY_ID Method")
+  
+@app.route('/GetAllCategories', methods=['GET'])
+def getAllCategories():
+    try:
+        app.logger.info('getAllCategories Process Starting')
+        con = DataBase.getConnection()
+        cur = con.cursor()
+        cur.execute("""SELECT JSON_ARRAYAGG(
+                                JSON_OBJECT(
+                                    'categoryId', c.category_id,
+                                    'categoryName', c.category_name,
+                                    'isActive', c.is_active,
+                                    'createdDate', c.created_date,
+                                    'updatedDate', c.updated_date
+                                )
+                            )
+                            FROM category as c;""")
+        rows = cur.fetchall()
+        con.close()
+        result_json_str = rows[0][0]
+        result_json = json.loads(result_json_str)
+        app.logger.info('getAllCategories request received successfully')
+        return jsonify(result_json)
+    
+    except Exception as e:
+        app.logger.error(f'Error: {str(e)}')
+        return jsonify(e,"An Error Occured in Getting getAllCategories")
+    
+@app.route('/GetAllTaskGroupName', methods=['GET'])
+def GetAllTaskGroupName():
+  try:
+    app.logger.info('GetAllTaskGroupName Process Starting')
+    con = DataBase.getConnection()
+    cur = con.cursor()
+    cur.execute("""SELECT JSON_ARRAYAGG(
+                            JSON_OBJECT('categoryID',C.category_id,
+                                        'taskGroupID',tbl.taskgroup_id,
+                                        'taskGroupName',tbl.taskgroup_name 
+                                        )
+                                    )
+                                    FROM tbltaskgroup AS tbl INNER JOIN category AS C On tbl.category_id = C.category_id""")
+    rows = cur.fetchall()
+    con.close()
+    result_json_str = rows[0][0]
+    result_json = json.loads(result_json_str)
+    app.logger.info('GetAllTaskGroupName request received successfully')
+    return jsonify(result_json)
 
-@app.route('/Estimator_Update1',methods=['PUT'])
+  except Exception as e:
+    app.logger.error('An error occurred: %s', str(e))
+    return jsonify(e,"An Error Occured in Getting GetAllTaskGroupName")
+
+@app.route('/EstimatorUpdate',methods=['PUT'])
 def update_Estimator(): 
     try: 
-        app.logger.info('Update1 Method Starting')
+        app.logger.info('EstimatorUpdate Method Starting')
         request1= request.get_json()    
         for lst in request1:
             BI_estimator_ID=lst["BI_estimator_ID"]
@@ -232,8 +283,8 @@ def update_Estimator():
             app.logger.info('bi_estimator Update1 Request Received Successfully')
 
             for lst in bi_taskgroup:   
-                cur.execute('UPDATE  bi_taskgroup SET taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
-                        (lst['taskgroup_id'],lst['updated_date'],lst['is_active'],lst['BI_taskGroup_id']))
+                cur.execute('UPDATE  bi_taskgroup SET BI_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
+                        (lst['BI_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'],lst['BI_taskGroup_id']))
                 app.logger.info('bi_taskgroup Update1 Request Received Successfully')
                 for tsklist in lst["bi_tasks"]:                   
                     cur.execute('UPDATE bi_tasks SET taskName=%s, totalNum=%s, totalPerUnit=%s, totalEffort=%s,updated_date=%s,is_active=%s,BI_taskGroup_id=%s WHERE BI_task_id=%s',
@@ -242,17 +293,17 @@ def update_Estimator():
             con.commit()
             con.close()
         values = request.get_json()
-        app.logger.info('Estimator_Update1 Process Successfully Executed')
+        app.logger.info('EstimatorUpdate Process Successfully Executed')
         return jsonify(values,"Data Successfully Updated")
     
     except Exception as e:
         app.logger.error('An error occurred: %s', str(e))
         return jsonify(e,"An ERROR occurred in table BI_PUT Method")
 
-@app.route('/EstimatorUpdate', methods=['PUT'])
+@app.route('/Estimator_Updt_Delete', methods=['PUT'])
 def updateInsert_Estimator():
     try:
-        app.logger.info('EstimatorUpdate Method Starting')
+        app.logger.info('Estimator_Updt_Delete Method Starting')
         request1 = request.get_json()
         for lst in request1:
             BI_estimator_ID = lst.get("BI_estimator_ID")
@@ -287,8 +338,8 @@ def updateInsert_Estimator():
             for lst in bi_taskgroup:
                 BI_taskGroup_id = lst.get("BI_taskGroup_id")
                 if BI_taskGroup_id is not None and BI_taskGroup_id != "":
-                    cur.execute('UPDATE bi_taskgroup SET taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
-                                (lst['taskgroup_id'],lst['updated_date'],lst['is_active'], BI_taskGroup_id))
+                    cur.execute('UPDATE bi_taskgroup SET BI_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
+                                (lst['BI_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'], BI_taskGroup_id))
                     app.logger.info("bi_taskgroup  Data Updated Successfully")
                 else:
                     cur.execute('INSERT INTO bi_taskgroup(is_active,taskgroup_id, BI_estimator_ID) VALUES (%s, %s,%s)',
@@ -312,7 +363,7 @@ def updateInsert_Estimator():
             con.commit()
             con.close()
             values = request.get_json()
-            app.logger.info('EstimatorUpdate Process Successfully Executed')
+            app.logger.info('Estimator_Updt_Delete Process Successfully Executed')
             return jsonify(values,"Data Successfully Updated")
         
     except Exception as e:
@@ -341,6 +392,7 @@ def delete_Esti_ByID():
     except Exception as e:
         app.logger.error('An error occurred: %s', str(e))
         return jsonify(e,"An ERROR occurred in table BI_DELETE Method")
+
 
 
 if __name__ == '__main__':

@@ -1,9 +1,12 @@
-[2023-05-18 16:05:51,336] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+[2023-05-24 15:57:52,152] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
-[2023-05-18 16:05:51,336] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
-[2023-05-18 16:07:09,043] INFO in app: Get_ByID_Estimator : 132 : Get By_ID Process Starting
-[2023-05-18 16:07:11,500] INFO in app: Get_ByID_Estimator : 180 : Get By_ID request received Successfully
-[2023-05-18 16:07:11,501] INFO in _internal: _log : 186 : 127.0.0.1 - - [18/May/2023 16:07:11] "GET /Est_getbyid-Estimator/7 HTTP/1.1" 200 -
-[2023-05-18 16:07:17,704] INFO in app: Get_allEst_tables : 77 : Get All Process Starting
-[2023-05-18 16:07:20,252] INFO in app: Get_allEst_tables : 122 : Get All request received Successfully
-[2023-05-18 16:07:20,259] INFO in _internal: _log : 186 : 127.0.0.1 - - [18/May/2023 16:07:20] "GET /Est_Getall HTTP/1.1" 200 -
+[2023-05-24 15:57:52,154] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-05-24 15:58:07,882] INFO in _internal: _log : 186 : 127.0.0.1 - - [24/May/2023 15:58:07] "[33mGET /Dashboard_getbyid-Estimator/45 HTTP/1.1[0m" 404 -
+[2023-05-24 15:58:13,659] INFO in _internal: _log : 186 : 127.0.0.1 - - [24/May/2023 15:58:13] "[33mGET /Dashboard_getbyid-Estimator/1 HTTP/1.1[0m" 404 -
+[2023-05-24 15:58:39,777] INFO in _internal: _log : 186 : 127.0.0.1 - - [24/May/2023 15:58:39] "[33mGET /DashBoard_Est_Getall HTTP/1.1[0m" 404 -
+[2023-05-24 15:58:58,936] INFO in app: Get_allEst_tables : 79 : BI_Get All Process Starting
+[2023-05-24 15:59:02,613] INFO in app: Get_allEst_tables : 127 : BI_Get All request received Successfully
+[2023-05-24 15:59:02,616] INFO in _internal: _log : 186 : 127.0.0.1 - - [24/May/2023 15:59:02] "GET /Est_Getall HTTP/1.1" 200 -
+[2023-05-24 16:00:21,446] INFO in app: Get_ByID_Estimator : 137 : BI_Get By_ID Process Starting
+[2023-05-24 16:00:25,435] INFO in app: Get_ByID_Estimator : 189 : Get By_ID request received Successfully
+[2023-05-24 16:00:25,435] INFO in _internal: _log : 186 : 127.0.0.1 - - [24/May/2023 16:00:25] "GET /Est_getbyid-Estimator/1 HTTP/1.1" 200 -
