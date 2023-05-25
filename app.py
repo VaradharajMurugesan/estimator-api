@@ -1,5 +1,7 @@
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,send_file
 import json
+import xlsxwriter
+from io import BytesIO
 from data import DataBase
 from logging.config import dictConfig
 
@@ -393,7 +395,77 @@ def delete_Esti_ByID():
         app.logger.error('An error occurred: %s', str(e))
         return jsonify(e,"An ERROR occurred in table BI_DELETE Method")
 
+@app.route('/download_excel_api/<int:BI_estimator_ID>', methods=['GET'])
+def downloadExcelApi(BI_estimator_ID):
+    try:
+        app.logger.info("Starting Excell Api function")
+        apiResponse = createApiResponse(BI_estimator_ID)
+        app.logger.info("ExcelFile Returning process Successfully executed")
+        return apiResponse
+    
+    except Exception as e:
+        app.logger.error('An error occurred: %s', str(e))
+        return jsonify(e,"An ERROR occurred in downloadExcelApi function")
 
+def createApiResponse(BI_estimator_ID):
+    try:
+        app.logger.info("Calling writeBufferExcelFile function")
+        bufferFile = writeBufferExcelFile(BI_estimator_ID)
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        app.logger.info("Returning the bufferFile to downloadExcelApi function")
+        return send_file(bufferFile,mimetype=mimetype)
+
+    except Exception as e:
+        app.logger.error('An error occurred: %s', str(e))
+        return jsonify(e,"An ERROR occurred in createApiResponse function")
+    
+def writeBufferExcelFile(BI_estimator_ID):
+    try:
+        app.logger.info("Updating data to excell file")
+        con = DataBase.getConnection()
+        cur = con.cursor()
+        cur.execute ("""SELECT  c.category_name,
+                                e.estimatorName,
+                                e.projectName,
+                                e.BIName,
+                                e.totalEfforts_inPersonHours,
+                                e.retestingEfforts,
+                                e.totalEfforts_inPersonDays,
+                                tg1.taskgroup_name,
+                                t.taskName,
+                                t.totalNum,
+                                t.totalPerUnit,
+                                t.totalEffort 
+                            FROM bi_estimator e
+                            INNER JOIN bi_taskgroup tg
+                            ON tg.BI_estimator_ID = e.BI_estimator_ID
+                            INNER JOIN bi_tasks t
+                            ON t.BI_taskGroup_id = tg.BI_taskGroup_id
+                            INNER JOIN tbltaskgroup tg1
+                            ON tg1.taskgroup_id = tg.taskgroup_id
+                            INNER JOIN category c
+                            ON c.category_id = e.category_id
+                            WHERE e.BI_estimator_ID = %s
+                            AND e.is_active = 1
+                            AND tg.is_active = 1
+                            AND t.is_active = 1""", (BI_estimator_ID,))
+        rows = cur.fetchall()        
+        headers = [desc[0] for desc in cur.description]
+        #print(headers)
+        buffer = BytesIO()
+        workbook = xlsxwriter.Workbook(buffer)
+        worksheet = workbook.add_worksheet()
+        worksheet.write_row(0, 0, headers)
+        for row_num, data in enumerate(rows,start=1):
+          worksheet.write_row(row_num,0, data)
+        workbook.close()
+        buffer.seek(0)
+        app.logger.info("Returning the ExcelData to createApiResponse function")
+        return buffer
+
+    except Exception as e:
+        app.logger.error('An error occurred: %s', str(e))
+        return (e,"An ERROR occurred in table returning Excell_file Method")
 
 if __name__ == '__main__':
    app.run()
