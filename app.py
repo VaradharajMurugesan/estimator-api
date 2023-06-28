@@ -539,7 +539,7 @@ def bi_downloadExcelApi(category_id, estimator_ids):
         query = bi_generateQuery(category_id, estimator_ids)
         file_path = bi_writeExcelFile(query)
         app.logger.info("Excel File Returning process successfully executed")
-        filename = 'data.xlsx'
+        filename = 'Bi_data.xlsx'
         response = make_response(send_file(file_path, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
         response.headers['Content-Disposition'] = f"attachment; filename={filename}"
         return response
@@ -579,7 +579,7 @@ def bi_writeExcelFile(query):
         # Create a temporary file path
         temp_dir = os.path.join(app.instance_path, 'temp')
         os.makedirs(temp_dir, exist_ok=True)
-        temp_file = os.path.join(temp_dir, 'data.xlsx')
+        temp_file = os.path.join(temp_dir, 'Bi_data.xlsx')
         workbook = xlsxwriter.Workbook(temp_file)
         worksheet = workbook.add_worksheet()
         header_format = workbook.add_format(
@@ -599,7 +599,7 @@ def bi_writeExcelFile(query):
                                   )
         # Merge cells for the image
         worksheet.merge_range("A1:J3", "", merge_format)
-        worksheet.insert_image("A1",r"C:\Users\Admin\Desktop\API_TOOL_2\emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 320, "y_offset": 10})
+        worksheet.insert_image("A1",r"Image/emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 320, "y_offset": 10})
         worksheet.set_column(0,1,25)
         cur.execute(query)
         rows = cur.fetchall()
@@ -638,7 +638,7 @@ def bi_writeExcelFile(query):
             row_num += 1
 
         workbook.close()
-        app.logger.info("Returning the Excel data")
+        app.logger.info("Returning the Excel BI_data")
         return temp_file
 
     except Exception as e:
@@ -1141,7 +1141,7 @@ def etl_writeExcelFile(query):
              'bg_color': '#F0FFFF',
              'border': 2
             })
-        header_format2 = workbook.add_format({'bold': True, 'bg_color': '#0080FF', 'border': 2})
+        header_format2 = workbook.add_format({'bold': True, 'bg_color': '#EE4B2B', 'border': 2})
         border_format = workbook.add_format({'border': 2})
         merge_format = workbook.add_format(
                                       {
@@ -1152,8 +1152,8 @@ def etl_writeExcelFile(query):
                                       }
                                   )
         # Merge cells for the image
-        worksheet.merge_range("A1:E3", "", merge_format)
-        worksheet.insert_image("A1",r"C:\Users\Admin\Downloads\API_TOOL1 (1)\API_TOOL2\Emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 150, "y_offset": 10})
+        worksheet.merge_range("A1:J3", "", merge_format)
+        worksheet.insert_image("A1",r"Image/emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 320, "y_offset": 10})
         worksheet.set_column(0,1,25)
         cur.execute(query)
         rows = cur.fetchall()
@@ -1176,12 +1176,12 @@ def etl_writeExcelFile(query):
         TotalEffortsInPersonHours=rows[0][3]
         RetestingEfforts=rows[0][4]
         TotalEffortsInPersonDays=rows[0][5]
-        worksheet.merge_range("B4:E4", category_name, merge_format,)
-        worksheet.merge_range("B5:E5", project_name, merge_format)
-        worksheet.merge_range("B6:E6", estimator_name, merge_format)
-        worksheet.write("B7:E7", TotalEffortsInPersonHours, border_format)
-        worksheet.write("B8:E8", RetestingEfforts, border_format)
-        worksheet.write("B9:E9", TotalEffortsInPersonDays, border_format)
+        worksheet.merge_range("B4:J4", category_name, merge_format,)
+        worksheet.merge_range("B5:J5", project_name, merge_format)
+        worksheet.merge_range("B6:J6", estimator_name, merge_format)
+        worksheet.write("B7:J7", TotalEffortsInPersonHours, border_format)
+        worksheet.write("B8:J8", RetestingEfforts, border_format)
+        worksheet.write("B9:J9", TotalEffortsInPersonDays, border_format)
         #worksheet.merge_range(0,7, c)
         headers=['taskgroup_name','taskName', 'simple', 'medium', 'complex', 'simpleWF', 'mediumWF', 'complexWF', 'effortDays', 'effortHours',]
         for col, header_text in enumerate(headers):
@@ -1624,7 +1624,7 @@ def qa_downloadExcelApi(category_id, estimator_ids):
         query = qa_generateQuery(category_id, estimator_ids)
         file_path = qa_writeExcelFile(query)
         app.logger.info("Excel File Returning process successfully executed")
-        filename = 'data.xlsx'
+        filename = 'Qa_data.xlsx'
         response = make_response(send_file(file_path, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
         response.headers['Content-Disposition'] = f"attachment; filename={filename}"
         return response
@@ -1664,7 +1664,7 @@ def qa_writeExcelFile(query):
         # Create a temporary file path
         temp_dir = os.path.join(app.instance_path, 'temp')
         os.makedirs(temp_dir, exist_ok=True)
-        temp_file = os.path.join(temp_dir, 'data.xlsx')
+        temp_file = os.path.join(temp_dir, 'Qa_data.xlsx')
         workbook = xlsxwriter.Workbook(temp_file)
         worksheet = workbook.add_worksheet()
         header_format = workbook.add_format(
@@ -1684,7 +1684,7 @@ def qa_writeExcelFile(query):
                                   )
         # Merge cells for the image
         worksheet.merge_range("A1:J3", "", merge_format)
-        worksheet.insert_image("A1",r"C:\Users\Admin\Desktop\API_TOOL_2\emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 320, "y_offset": 10})
+        worksheet.insert_image("A1",r"Image/emergere-logo.png",{"x_scale": 0.2, "y_scale": 0.2, "x_offset": 320, "y_offset": 10})
         worksheet.set_column(0,1,25)
         cur.execute(query)
         rows = cur.fetchall()
