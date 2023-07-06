@@ -256,35 +256,50 @@ def GetAllTaskGroupName():
     app.logger.error('An error occurred: %s', str(e))
     return jsonify(e,"An Error Occured in Getting GetAllTaskGroupName")
   
-@app.route('/GetAllTaskListName', methods=['GET'])
-def GetAllTaskListName():
+@app.route('/GetAllTaskListName/<int:category_id>', methods=['GET'])
+def getAllTaskListName(category_id):
   try:
     app.logger.info('GetAllTaskListName Process Starting')
     con = DataBase.getConnection()
     cur = con.cursor()
     cur.execute("""SELECT JSON_ARRAYAGG(
-                        JSON_OBJECT('categoryID', C.category_id,
-                                    'taskGroupID', tbl.taskgroup_id,
-                                    'taskGroupName', tbl.taskgroup_name,
-                                    'TaskLists', (
-                                        SELECT JSON_ARRAYAGG(
-                                            JSON_OBJECT(
-                                            'taskID',tlt.tasklist_id,
-                                            'taskListName', tlt.task_name)
+                        JSON_OBJECT(
+                            'categoryID', C.category_id,
+                            'categoryName', C.category_name,
+                            'TaskGroup', (
+                                SELECT JSON_ARRAYAGG(
+                                    JSON_OBJECT(
+                                        'taskGroupID', tbl.taskgroup_id,
+                                        'taskGroupName', tbl.taskgroup_name,
+                                        'TaskLists', (
+                                            SELECT JSON_ARRAYAGG(
+                                                JSON_OBJECT(
+                                                    'taskID', tlt.tasklist_id,
+                                                    'taskListName', tlt.task_name
+                                                )
+                                            )
+                                            FROM tbltasklist AS tlt
+                                            WHERE tlt.taskgroup_id = tbl.taskgroup_id
                                         )
-                                        FROM tbltasklist AS tlt
-                                        WHERE tlt.taskgroup_id = tbl.taskgroup_id
                                     )
+                                )
+                                FROM tbltaskgroup AS tbl
+                                WHERE tbl.category_id = C.category_id and tbl.is_active = 1
+                            )
                         )
-                    )
-                    FROM tbltaskgroup AS tbl
-                    INNER JOIN category AS C ON tbl.category_id = C.category_id;""")
+                    ) AS json_data
+                    FROM category AS C
+                    WHERE C.category_id = %s;""",(category_id,))
+
     rows = cur.fetchall()
+    if len(rows) == 0:
+        app.logger.info('Record Not Found for this Specific category_id')
+        return jsonify("please enter a valid category_id")
     con.close()
     result_json_str = rows[0][0]
     result_json = json.loads(result_json_str)
-    app.logger.info('GetAllTaskListName request received successfully')
-    return jsonify(result_json)
+    app.logger.info('GetAllTaskListName request received Successfully')
+    return jsonify(f"Showing category_id : {category_id}", result_json)
 
   except Exception as e:
     app.logger.error('An error occurred: %s', str(e))
