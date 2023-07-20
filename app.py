@@ -1,6 +1,7 @@
 from flask import Flask,request,jsonify,send_file,make_response
 import json
 from data import DataBase
+from datetime import datetime
 from logging.config import dictConfig
 import xlsxwriter
 import os
@@ -40,7 +41,7 @@ cur=con.cursor()
 def bi_add_Estimator():
     try:
         app.logger.info('BI Insert Process Starting')
-        category_id=request.json["category_id"]
+        category_id=request.json["categoryId"]
         projectName=request.json["projectName"]
         estimatorName=request.json["estimatorName"]
         BIName=request.json["BIName"]
@@ -91,14 +92,14 @@ def bi_Get_allEst_tables():
                             'biEstimatorId', e.BI_estimator_ID,
                             'projectName', e.projectName,
                             'estimatorName', e.estimatorName,
-                            'bIName', e.BIName,
+                            'biName', e.BIName,
                             'totalEffortsInPersonHours', e.totalEfforts_inPersonHours,
                             'retestingEfforts', e.retestingEfforts,
                             'totalEffortsInPersonDays', e.totalEfforts_inPersonDays,
                             'createdDate',e.created_date,
                             'updatedDate',e.updated_date,
                             'isActive',e.is_active,
-                            'biTaskgroup', 
+                            'biTaskGroup', 
                         (SELECT JSON_ARRAYAGG(
                              JSON_OBJECT(
                                       'biTaskGroupId', tg.BI_taskGroup_id,
@@ -111,7 +112,7 @@ def bi_Get_allEst_tables():
                                       'biTasks', 
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
-                                              'biTaskId', t.bi_tasklist_id, 
+                                              'biTaskListId', t.bi_tasklist_id, 
                                               'biTaskGroupId',t.BI_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -153,14 +154,14 @@ def bi_Get_ByID_Estimator(BI_estimator_ID):
                               'biEstimatorId', e.BI_estimator_ID,
                               'projectName', e.projectName,
                               'estimatorName', e.estimatorName,
-                              'bIName', e.BIName,
+                              'biName', e.BIName,
                               'totalEffortsInPersonHours', e.totalEfforts_inPersonHours,
                               'retestingEfforts', e.retestingEfforts,
                               'totalEffortsInPersonDays', e.totalEfforts_inPersonDays,
                               'createdDate',e.created_date,
                               'updatedDate',e.updated_date,
                               'isActive',e.is_active,
-                              'biTaskgroup', 
+                              'biTaskGroup', 
                               (SELECT JSON_ARRAYAGG(
                                   JSON_OBJECT(
                                       'biTaskGroupId', tg.BI_taskGroup_id, 
@@ -173,7 +174,7 @@ def bi_Get_ByID_Estimator(BI_estimator_ID):
                                       'biTasks', 
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
-                                              'biTaskId', t.bi_tasklist_id, 
+                                              'biTaskListId', t.bi_tasklist_id, 
                                               'biTaskGroupId',t.BI_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -290,7 +291,6 @@ def getAllTaskListName(category_id):
                     ) AS json_data
                     FROM category AS C
                     WHERE C.category_id = %s;""",(category_id,))
-
     rows = cur.fetchall()
     if len(rows) == 0:
         app.logger.info('Record Not Found for this Specific category_id')
@@ -400,16 +400,16 @@ def bi_update_Estimator():
         app.logger.info('Bi_EstimatorUpdate Method Starting')
         request1= request.get_json()    
         for lst in request1:
-            BI_estimator_ID=lst["BI_estimator_ID"]
+            BI_estimator_ID=lst["biEstimatorId"]
             projectName=lst["projectName"]
             estimatorName=lst["estimatorName"]
-            BIName=lst["BIName"]
+            BIName=lst["bIName"]
             totalEfforts_inPersonHours=lst["totalEfforts_inPersonHours"]
             retestingEfforts=lst["retestingEfforts"]
             totalEfforts_inPersonDays=lst["totalEfforts_inPersonDays"]
-            updated_date=lst["updated_date"]
+            updated_date=datetime.now()
             is_active=lst["is_active"]
-            bi_taskgroup=lst["bi_taskgroup"]
+            bi_taskgroup=lst["biTaskgroup"]
             app.logger.info('Data Update Request Received Successfully')
             con = DataBase.getConnection()
             cur = con.cursor()
@@ -434,13 +434,13 @@ def bi_update_Estimator():
 
             for lst in bi_taskgroup:   
                 cur.execute('UPDATE  bi_taskgroup SET BI_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
-                        (lst['BI_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'],lst['BI_taskGroup_id']))
+                        (lst['BI_estimator_ID'],lst['taskgroup_id'],updated_date,lst['is_active'],lst['BI_taskGroup_id']))
                 app.logger.info('bi_taskgroup Update1 Request Received Successfully')
                 for tsklist in lst["bi_tasklist"]: 
                     upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
                     upt_effortRslt_hrs = upt_effortRslt_days*8
                     cur.execute('UPDATE bi_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s,BI_taskGroup_id=%s WHERE bi_tasklist_id=%s',
-                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,tsklist['updated_date'],tsklist['is_active'],tsklist['BI_taskGroup_id'],tsklist['bi_tasklist_id']))   
+                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,updated_date,tsklist['is_active'],tsklist['BI_taskGroup_id'],tsklist['bi_tasklist_id']))   
                     app.logger.info('bi_tasklist Update1 Request Received Successfully')
             con.commit()
             con.close()
@@ -458,61 +458,61 @@ def bi_updateInsert_Estimator():
         app.logger.info('Bi_Estimator_Updt_Delete Method Starting')
         request1 = request.get_json()
         for lst in request1:
-            BI_estimator_ID = lst.get("BI_estimator_ID")
-            category_id=lst["category_id"]
+            biEstimatorId = lst.get("biEstimatorId")
+            categoryId=lst["categoryId"]
             projectName = lst["projectName"]
             estimatorName = lst["estimatorName"]
-            BIName = lst["BIName"]
-            totalEfforts_inPersonHours = lst["totalEfforts_inPersonHours"]
+            biName = lst["biName"]
+            totalEffortsInPersonHours = lst["totalEffortsInPersonHours"]
             retestingEfforts = lst["retestingEfforts"]
-            totalEfforts_inPersonDays = lst["totalEfforts_inPersonDays"]
-            updated_date = lst["updated_date"]
-            bi_taskgroup = lst["bi_taskgroup"]
-            is_active=lst["is_active"]
+            totalEffortsInPersonDays = lst["totalEffortsInPersonDays"]
+            updatedDate = datetime.now()
+            biTaskGroup = lst["biTaskGroup"]
+            isActive=lst["isActive"]
             app.logger.info('Data update request received')
             con = DataBase.getConnection()
             cur = con.cursor()            
-            if BI_estimator_ID is not None and BI_estimator_ID != "":
+            if biEstimatorId is not None and biEstimatorId != "":
                 sql = """UPDATE bi_estimator SET projectName=%s, estimatorName=%s, BIName=%s, 
                          totalEfforts_inPersonHours=%s, retestingEfforts=%s, totalEfforts_inPersonDays=%s,
                          updated_date=%s,is_active=%s WHERE  BI_estimator_ID=%s """
-                cur.execute(sql, (projectName, estimatorName, BIName, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays, updated_date,is_active, BI_estimator_ID))
+                cur.execute(sql, (projectName, estimatorName, biName, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays, updatedDate,isActive, biEstimatorId))
                 app.logger.info("bi_estimator Data Updated Successfully")
             else:
                 sql = """INSERT INTO bi_estimator(category_id,projectName, estimatorName, BIName, 
                          totalEfforts_inPersonHours, retestingEfforts, totalEfforts_inPersonDays,is_active)
                          VALUES (%s, %s, %s, %s, %s, %s,%s,%s)"""
-                cur.execute(sql, (category_id,projectName, estimatorName, BIName, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays,is_active))
-                BI_estimator_ID = cur.lastrowid
+                cur.execute(sql, (categoryId,projectName, estimatorName, biName, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays,isActive))
+                biEstimatorId = cur.lastrowid
                 app.logger.info('bi_estimator Data Newly Inserted Successfully By PUT Method')
-            for lst in bi_taskgroup:
-                BI_taskGroup_id = lst.get("BI_taskGroup_id")
-                if BI_taskGroup_id is not None and BI_taskGroup_id != "":
-                    cur.execute('UPDATE bi_taskgroup SET BI_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
-                                (lst['BI_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'], BI_taskGroup_id))
+            for lst in biTaskGroup:
+                biTaskGroupId = lst.get("biTaskGroupId")
+                if biTaskGroupId is not None and biTaskGroupId != "":
+                    cur.execute('UPDATE bi_taskgroup SET taskgroup_id=%s,updated_date=%s,is_active=%s WHERE BI_taskGroup_id=%s',
+                                (lst['taskGroupId'],updatedDate,lst['isActive'], biTaskGroupId))
                     app.logger.info("bi_taskgroup  Data Updated Successfully")
                 else:
                     cur.execute('INSERT INTO bi_taskgroup(is_active,taskgroup_id, BI_estimator_ID) VALUES (%s, %s,%s)',
-                                (lst['is_active'],lst["taskgroup_id"], BI_estimator_ID))
-                    BI_taskGroup_id = cur.lastrowid
+                                (lst['isActive'],lst["taskGroupId"], biEstimatorId))
+                    biTaskGroupId = cur.lastrowid
                     app.logger.info('bi_taskgroup Data Newly Inserted Successfully By PUT Method')
-                for tsklist in lst["bi_tasklist"]:
-                    bi_tasklist_id = tsklist.get("bi_tasklist_id")
-                    if bi_tasklist_id is not None and bi_tasklist_id != "":
-                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                for tsklist in lst["biTasks"]:
+                    biTaskListId = tsklist.get("biTaskListId")
+                    if biTaskListId is not None and biTaskListId != "":
+                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         upt_effortRslt_hrs = upt_effortRslt_days*8
                         cur.execute('UPDATE bi_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s WHERE bi_tasklist_id=%s',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'], upt_effortRslt_days, upt_effortRslt_hrs, tsklist['updated_date'],tsklist['is_active'], bi_tasklist_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'], upt_effortRslt_days, upt_effortRslt_hrs, updatedDate,tsklist['isActive'], biTaskListId))
                         app.logger.info("bi_tasklist Data Updated Successfully")
                     else:
-                        effort_result_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                        effort_result_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         effort_result_hrs = effort_result_days*8
                         cur.execute('INSERT INTO bi_tasklist(tasklist_id,simple, medium, complex, simpleWF, mediumWF, complexWF, effort_days, effort_hours, is_active,BI_taskGroup_id) '
                                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],
-                                      effort_result_days, effort_result_hrs,tsklist['is_active'], BI_taskGroup_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'],
+                                      effort_result_days, effort_result_hrs,tsklist['isActive'], biTaskGroupId))
                         app.logger.info('bi_tasklist Data Newly Inserted Successfully By PUT Method')
             con.commit()
             con.close()
@@ -667,7 +667,7 @@ def etl_add_Estimator():
     
     try:
         app.logger.info('Etl_Estimator Insert Process Starting')
-        category_id=request.json["category_id"]
+        category_id=request.json["categoryId"]
         projectName=request.json["projectName"]
         estimatorName=request.json["estimatorName"]
         etlName=request.json["etlName"]
@@ -686,7 +686,6 @@ def etl_add_Estimator():
         app.logger.info('etl_estimator Insert request received Successfully')
         
         for lst in etl_taskgroup:   
-            
             cur.execute('INSERT INTO etl_taskgroup(is_active,taskgroup_id, etl_estimator_ID) VALUES (%s,%s,%s)',
                        (lst["is_active"],lst["taskgroup_id"],etl_estimator_ID))
             etl_taskGroup_id=cur.lastrowid
@@ -730,7 +729,7 @@ def etl_Get_allEst_tables():
                             'createdDate',e.created_date,
                             'updatedDate',e.updated_date,
                             'isActive',e.is_active,
-                            'etlTaskGroup', 
+                            'etlTaskGroups', 
                         (SELECT JSON_ARRAYAGG(
                              JSON_OBJECT(
                                       'etlTaskGroupId', tg.etl_taskGroup_id,
@@ -740,10 +739,10 @@ def etl_Get_allEst_tables():
                                       'createdDate',tg.created_date,
                                       'updatedDate',tg.updated_date,
                                       'isActive',tg.is_active,
-                                      'etlTasklist', 
+                                      'etlTaskLists', 
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
-                                              'etlTasklistId', t.etl_tasklist_id, 
+                                              'etlTaskListId', t.etl_tasklist_id, 
                                               'etlTaskGroupId',t.etl_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -776,7 +775,7 @@ def etl_Get_allEst_tables():
 
 
 @app.route('/Etl_EstGetByID/<int:etl_estimator_ID>', methods=['GET'])
-def etl_Get_ByID(etl_estimator_ID):
+def bi_Get_ByID_ETL(etl_estimator_ID):
   try:
       app.logger.info('ETL GET by ID Process Starting')
       con = DataBase.getConnection()
@@ -794,7 +793,7 @@ def etl_Get_ByID(etl_estimator_ID):
                               'createdDate',e.created_date,
                               'updatedDate',e.updated_date,
                               'isActive',e.is_active,
-                              'etlTaskgroup', 
+                              'etlTaskGroups', 
                               (SELECT JSON_ARRAYAGG(
                                   JSON_OBJECT(
                                       'etlTaskGroupId', tg.etl_taskGroup_id, 
@@ -804,10 +803,10 @@ def etl_Get_ByID(etl_estimator_ID):
                                       'createdDate',tg.created_date,
                                       'updatedDate',tg.updated_date,
                                       'isActive',tg.is_active,
-                                      'etlTasklist', 
+                                      'etlTaskLists', 
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
-                                              'etlTaskId', t.etl_tasklist_id, 
+                                              'etlTaskListId', t.etl_tasklist_id, 
                                               'etlTaskGroupId',t.etl_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -937,14 +936,14 @@ def etl_update_Estimator():
         app.logger.info('ETL Update Method Starting...')
         request1= request.get_json()    
         for lst in request1:
-            etl_estimator_ID=lst["etl_estimator_ID"]
+            etl_estimator_ID=lst["etlEstimatorId"]
             projectName=lst["projectName"]
             estimatorName=lst["estimatorName"]
             etlName=lst["etlName"]
             totalEfforts_inPersonHours=lst["totalEfforts_inPersonHours"]
             retestingEfforts=lst["retestingEfforts"]
             totalEfforts_inPersonDays=lst["totalEfforts_inPersonDays"]
-            updated_date=lst["updated_date"]
+            updated_date=datetime.now()
             is_active=lst["is_active"]
             etl_taskgroup=lst["etl_taskgroup"]
             app.logger.info('Data Update Request Received Successfully')
@@ -973,14 +972,14 @@ def etl_update_Estimator():
             for lst in etl_taskgroup:
                    
                 cur.execute('UPDATE  etl_taskgroup SET etl_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE etl_taskGroup_id=%s',
-                        (lst['etl_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'],lst['etl_taskGroup_id']))
+                        (lst['etl_estimator_ID'],lst['taskgroup_id'],updated_date,lst['is_active'],lst['etl_taskGroup_id']))
                 app.logger.info('ETL Taskgroup Update Request Received Successfully')
                 
                 for tsklist in lst["etl_tasklist"]: 
                     upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
                     upt_effortRslt_hrs = upt_effortRslt_days*8
                     cur.execute('UPDATE etl_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s,etl_taskGroup_id=%s WHERE etl_tasklist_id=%s',
-                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,tsklist['updated_date'],tsklist['is_active'],tsklist['etl_taskGroup_id'],tsklist['etl_tasklist_id']))   
+                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,updated_date,tsklist['is_active'],tsklist['etl_taskGroup_id'],tsklist['etl_tasklist_id']))   
                     app.logger.info('ETL_tasklist Update Request Received Successfully')
                     
             con.commit()
@@ -1000,69 +999,67 @@ def etl_updateInsert_Estimator():
         app.logger.info('ETL_Updt_Delete Method Starting')
         request1 = request.get_json()
         for lst in request1:
-            etl_estimator_ID = lst.get("etl_estimator_ID")
-            category_id=lst["category_id"]
+            etlEstimatorId = lst.get("etlEstimatorId")
+            categoryId=lst["categoryId"]
             projectName = lst["projectName"]
             estimatorName = lst["estimatorName"]
             etlName = lst["etlName"]
-            totalEfforts_inPersonHours = lst["totalEfforts_inPersonHours"]
+            totalEffortsInPersonHours = lst["totalEffortsInPersonHours"]
             retestingEfforts = lst["retestingEfforts"]
-            totalEfforts_inPersonDays = lst["totalEfforts_inPersonDays"]
-            updated_date = lst["updated_date"]
-            etl_taskgroup = lst["etl_taskgroup"]
-            is_active=lst["is_active"]
+            totalEffortsInPersonDays = lst["totalEffortsInPersonDays"]
+            updatedDate = datetime.now()
+            etlTaskGroups = lst["etlTaskGroups"]
+            isActive=lst["isActive"]
             app.logger.info('Data update request received on ETL Table')
             con = DataBase.getConnection()
             cur = con.cursor()        
                 
-            if etl_estimator_ID is not None and etl_estimator_ID != "":
+            if etlEstimatorId is not None and etlEstimatorId != "":
                 sql = """UPDATE etl_estimator SET projectName=%s, estimatorName=%s, etlName=%s, 
                          totalEfforts_inPersonHours=%s, retestingEfforts=%s, totalEfforts_inPersonDays=%s,
                          updated_date=%s,is_active=%s WHERE  etl_estimator_ID=%s """
-                cur.execute(sql, (projectName, estimatorName, etlName, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays, updated_date,is_active, etl_estimator_ID))
+                cur.execute(sql, (projectName, estimatorName, etlName, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays, updatedDate,isActive, etlEstimatorId))
                 app.logger.info("ETL estimator_ID Data Updated Successfully")
            
             else:
                 sql = """INSERT INTO etl_estimator(category_id,projectName, estimatorName, etlName, 
                          totalEfforts_inPersonHours, retestingEfforts, totalEfforts_inPersonDays,is_active)
                          VALUES (%s, %s, %s, %s, %s, %s,%s,%s)"""
-                cur.execute(sql, (category_id,projectName, estimatorName, etlName, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays,is_active))
-                etl_estimator_ID = cur.lastrowid
+                cur.execute(sql, (categoryId,projectName, estimatorName, etlName, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays,isActive))
+                etlEstimatorId = cur.lastrowid
                 app.logger.info('ETL Estimator Data Newly Inserted Successfully By PUT Method')
                 
-            for lst in etl_taskgroup:
-                etl_taskGroup_id = lst.get("etl_taskGroup_id")
-                
-                if etl_taskGroup_id is not None and etl_taskGroup_id != "":
-                    cur.execute('UPDATE etl_taskgroup SET etl_taskGroup_id=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE etl_taskGroup_id=%s',
-                                (lst['etl_taskGroup_id'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'], etl_taskGroup_id))
+            for lst in etlTaskGroups:
+                etlTaskGroupId = lst.get("etlTaskGroupId")
+                if etlTaskGroupId is not None and etlTaskGroupId != "":
+                    cur.execute('UPDATE etl_taskgroup SET taskgroup_id=%s,updated_date=%s,is_active=%s WHERE etl_taskGroup_id=%s',
+                                (lst['taskGroupId'],updatedDate,lst['isActive'], etlTaskGroupId))
                     app.logger.info("ETL_Taskgroup Data Updated Successfully")
                     
                 else:
                     cur.execute('INSERT INTO etl_taskgroup (is_active,taskgroup_id, etl_estimator_ID) VALUES (%s, %s, %s)',
-                                (lst['is_active'],lst["taskgroup_id"], etl_estimator_ID))
-                    etl_taskGroup_id = cur.lastrowid
+                                (lst['isActive'],lst["taskGroupId"], etlEstimatorId))
+                    etlTaskGroupId = cur.lastrowid
                     app.logger.info('ETL TaskGroup Data Newly Inserted Successfully By PUT Method')
                     
-                for tsklist in lst["etl_tasklist"]:
-                    etl_tasklist_id = tsklist.get("etl_tasklist_id")
-                    
-                    if etl_tasklist_id is not None and etl_tasklist_id != "":
-                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                for tsklist in lst["etlTaskLists"]:
+                    etlTaskListId = tsklist.get("etlTaskListId")
+                    if etlTaskListId is not None and etlTaskListId != "":
+                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         upt_effortRslt_hrs = upt_effortRslt_days*8
                         cur.execute('UPDATE etl_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s WHERE etl_tasklist_id=%s',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'], upt_effortRslt_days, upt_effortRslt_hrs, tsklist['updated_date'],tsklist['is_active'], etl_tasklist_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'], upt_effortRslt_days, upt_effortRslt_hrs, updatedDate,tsklist['isActive'], etlTaskListId))
                         app.logger.info("ETL_tasklist_id Data Updated Successfully")
                     
                     else:
-                        effort_result_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                        effort_result_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         effort_result_hrs = effort_result_days*8
                         cur.execute('INSERT INTO etl_tasklist(tasklist_id,simple, medium, complex, simpleWF, mediumWF, complexWF, effort_days, effort_hours, is_active,etl_taskGroup_id) '
                                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],
-                                      effort_result_days, effort_result_hrs,tsklist['is_active'], etl_taskGroup_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'],
+                                      effort_result_days, effort_result_hrs,tsklist['isActive'], etlTaskGroupId))
                         app.logger.info('etl_tasklist Data Newly Inserted Successfully By PUT Method')
             con.commit()
             con.close()
@@ -1082,7 +1079,7 @@ def etl_delete_Esti_ByID():
         con = DataBase.getConnection()
         cur = con.cursor()
         data = request.get_json()
-        etl_estimator_ID = data.get("etl_estimator_ID")
+        etl_estimator_ID = data.get("etlEstimatorId")
         cur.execute("SELECT * FROM etl_estimator WHERE etl_estimator_ID = %s", [etl_estimator_ID])
         row = cur.fetchone()
         
@@ -1221,7 +1218,7 @@ def etl_writeExcelFile(query):
 def qa_Add_Estimator():
     try:
         app.logger.info('QA Insert Process Starting')
-        category_id=request.json["category_id"]
+        category_id=request.json["categoryId"]
         projectName=request.json["projectName"]
         estimatorName=request.json["estimatorName"]
         QAName=request.json["qaName"]
@@ -1279,7 +1276,7 @@ def qa_Get_allEst_tables():
                             'createdDate',e.created_date,
                             'updatedDate',e.updated_date,
                             'isActive',e.is_active,
-                            'qaTaskgroup', 
+                            'qaTaskGroups', 
                         (SELECT JSON_ARRAYAGG(
                              JSON_OBJECT(
                                       'qaTaskGroupId', tg.qa_taskGroup_id,
@@ -1289,10 +1286,10 @@ def qa_Get_allEst_tables():
                                       'createdDate',tg.created_date,
                                       'updatedDate',tg.updated_date,
                                       'isActive',tg.is_active,
-                                      'qaTasks', 
+                                      'qaTasksLists', 
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
-                                              'qaTaskId', t.qa_tasklist_id, 
+                                              'qaTaskListId', t.qa_tasklist_id, 
                                               'qaTaskGroupId',t.qa_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -1341,7 +1338,7 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
                               'createdDate',e.created_date,
                               'updatedDate',e.updated_date,
                               'isActive',e.is_active,
-                              'qaTaskgroup', 
+                              'qaTaskgroups', 
                               (SELECT JSON_ARRAYAGG(
                                   JSON_OBJECT(
                                       'qaTaskGroupId', tg.qa_taskGroup_id, 
@@ -1351,10 +1348,10 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
                                       'createdDate',tg.created_date,
                                       'updatedDate',tg.updated_date,
                                       'isActive',tg.is_active,
-                                      'qaTasks', 
+                                      'qaTasksLists', 
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
-                                              'qaTaskId', t.qa_tasklist_id, 
+                                              'qaTaskListId', t.qa_tasklist_id, 
                                               'qaTaskGroupId',t.qa_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -1388,8 +1385,7 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
   except Exception as e:
    app.logger.error('An error occurred: %s', str(e))
    return jsonify(e,"An ERROR occurred in table QA_GET_BY_ID Method")
-
-
+  
 @app.route('/Qa_GetFilterValues/<int:category_id>', methods=['GET'])
 def qa_getFilterValues(category_id):
     try:
@@ -1493,7 +1489,7 @@ def qa_update_Estimator():
             totalEfforts_inPersonHours=lst["totalEfforts_inPersonHours"]
             retestingEfforts=lst["retestingEfforts"]
             totalEfforts_inPersonDays=lst["totalEfforts_inPersonDays"]
-            updated_date=lst["updated_date"]
+            updated_date=datetime.now()
             is_active=lst["is_active"]
             QA_taskgroup=lst["qa_taskgroup"]
             app.logger.info('Data Update Request Received Successfully')
@@ -1520,13 +1516,13 @@ def qa_update_Estimator():
 
             for lst in QA_taskgroup:   
                 cur.execute('UPDATE  qa_taskgroup SET qa_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE qa_taskGroup_id=%s',
-                        (lst['qa_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'],lst['qa_taskGroup_id']))
+                        (lst['qa_estimator_ID'],lst['taskgroup_id'],updated_date,lst['is_active'],lst['qa_taskGroup_id']))
                 app.logger.info('QA_taskgroup Update1 Request Received Successfully')
                 for tsklist in lst["qa_tasklist"]: 
                     upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
                     upt_effortRslt_hrs = upt_effortRslt_days*8
                     cur.execute('UPDATE qa_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s,qa_taskGroup_id=%s WHERE qa_tasklist_id=%s',
-                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,tsklist['updated_date'],tsklist['is_active'],tsklist['qa_taskGroup_id'],tsklist['qa_tasklist_id']))   
+                                ( tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],upt_effortRslt_days, upt_effortRslt_hrs,updated_date,tsklist['is_active'],tsklist['qa_taskGroup_id'],tsklist['qa_tasklist_id']))   
                     app.logger.info('QA_tasklist Update1 Request Received Successfully')
             con.commit()
             con.close()
@@ -1544,61 +1540,61 @@ def qa_updateInsert_Estimator():
         app.logger.info('Qa_Estimator_Updt_Delete Method Starting')
         request1 = request.get_json()
         for lst in request1:
-            QA_estimator_ID = lst.get("qa_estimator_ID")
-            category_id=lst["category_id"]
+            qaEstimatorId = lst.get("qaEstimatorId")
+            categoryId=lst["categoryId"]
             projectName = lst["projectName"]
             estimatorName = lst["estimatorName"]
-            QAName = lst["qaName"]
-            totalEfforts_inPersonHours = lst["totalEfforts_inPersonHours"]
+            qaName = lst["qaName"]
+            totalEffortsInPersonHours = lst["totalEffortsInPersonHours"]
             retestingEfforts = lst["retestingEfforts"]
-            totalEfforts_inPersonDays = lst["totalEfforts_inPersonDays"]
-            updated_date = lst["updated_date"]
-            QA_taskgroup = lst["qa_taskgroup"]
-            is_active=lst["is_active"]
+            totalEffortsInPersonDays = lst["totalEffortsInPersonDays"]
+            updatedDate = datetime.now()
+            qaTaskGroups = lst["qaTaskGroups"]
+            isActive=lst["isActive"]
             app.logger.info('Data update request received')
             con = DataBase.getConnection()
             cur = con.cursor()            
-            if QA_estimator_ID is not None and QA_estimator_ID != "":
+            if qaEstimatorId is not None and qaEstimatorId != "":
                 sql = """UPDATE qa_estimator SET projectName=%s, estimatorName=%s, qaName=%s, category_id=%s,
                          totalEfforts_inPersonHours=%s, retestingEfforts=%s, totalEfforts_inPersonDays=%s,
                          updated_date=%s,is_active=%s WHERE  qa_estimator_ID=%s """
-                cur.execute(sql, (projectName, estimatorName, QAName,category_id, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays, updated_date,is_active, QA_estimator_ID))
+                cur.execute(sql, (projectName, estimatorName, qaName,categoryId, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays, updatedDate,isActive, qaEstimatorId))
                 app.logger.info("QA_estimator Data Updated Successfully")
             else:
                 sql = """INSERT INTO qa_estimator(category_id,projectName, estimatorName, qaName, 
                          totalEfforts_inPersonHours, retestingEfforts, totalEfforts_inPersonDays,is_active)
                          VALUES (%s, %s, %s, %s, %s, %s,%s,%s)"""
-                cur.execute(sql, (category_id,projectName, estimatorName, QAName, totalEfforts_inPersonHours,
-                                  retestingEfforts, totalEfforts_inPersonDays,is_active))
-                QA_estimator_ID = cur.lastrowid
+                cur.execute(sql, (categoryId,projectName, estimatorName, qaName, totalEffortsInPersonHours,
+                                  retestingEfforts, totalEffortsInPersonDays,isActive))
+                qaEstimatorId = cur.lastrowid
                 app.logger.info('QA_estimator Data Newly Inserted Successfully By PUT Method')
-            for lst in QA_taskgroup:
-                QA_taskGroup_id = lst.get("qa_taskGroup_id")
-                if QA_taskGroup_id is not None and QA_taskGroup_id != "":
-                    cur.execute('UPDATE qa_taskgroup SET qa_estimator_ID=%s,taskgroup_id=%s,updated_date=%s,is_active=%s WHERE qa_taskGroup_id=%s',
-                                (lst['qa_estimator_ID'],lst['taskgroup_id'],lst['updated_date'],lst['is_active'], QA_taskGroup_id))
+            for lst in qaTaskGroups:
+                qaTaskGroupId = lst.get("qaTaskGroupId")
+                if qaTaskGroupId is not None and qaTaskGroupId != "":
+                    cur.execute('UPDATE qa_taskgroup SET taskgroup_id=%s,updated_date=%s,is_active=%s WHERE qa_taskGroup_id=%s',
+                                (lst['taskGroupId'],updatedDate,lst['isActive'], qaTaskGroupId))
                     app.logger.info("QA_taskgroup  Data Updated Successfully")
                 else:
                     cur.execute('INSERT INTO qa_taskgroup(is_active,taskgroup_id, qa_estimator_ID) VALUES (%s, %s,%s)',
-                                (lst['is_active'],lst["taskgroup_id"], QA_estimator_ID))
-                    QA_taskGroup_id = cur.lastrowid
+                                (lst['isActive'],lst["taskGroupId"], qaEstimatorId))
+                    qaTaskGroupId = cur.lastrowid
                     app.logger.info('QA_taskgroup Data Newly Inserted Successfully By PUT Method')
-                for tsklist in lst["qa_tasklist"]:
-                    QA_tasklist_id = tsklist.get("qa_tasklist_id")
-                    if QA_tasklist_id is not None and QA_tasklist_id != "":
-                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                for tsklist in lst["qaTasksLists"]:
+                    qaTaskListId = tsklist.get("qaTaskListId")
+                    if qaTaskListId is not None and qaTaskListId != "":
+                        upt_effortRslt_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         upt_effortRslt_hrs = upt_effortRslt_days*8
                         cur.execute('UPDATE qa_tasklist SET tasklist_id=%s, simple=%s, medium=%s, complex=%s, simpleWF=%s, mediumWF=%s, complexWF=%s, effort_days=%s, effort_hours=%s,updated_date=%s,is_active=%s WHERE qa_tasklist_id=%s',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'], upt_effortRslt_days, upt_effortRslt_hrs, tsklist['updated_date'],tsklist['is_active'], QA_tasklist_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'], upt_effortRslt_days, upt_effortRslt_hrs, updatedDate,tsklist['isActive'], qaTaskListId))
                         app.logger.info("QA_tasklist Data Updated Successfully")
                     else:
-                        effort_result_days = tsklist['simple']*tsklist['simpleWF'] + tsklist['medium']*tsklist['mediumWF'] + tsklist['complex']*tsklist['complexWF']
+                        effort_result_days = tsklist['simple']*tsklist['simpleWf'] + tsklist['medium']*tsklist['mediumWf'] + tsklist['complex']*tsklist['complexWf']
                         effort_result_hrs = effort_result_days*8
                         cur.execute('INSERT INTO qa_tasklist(tasklist_id,simple, medium, complex, simpleWF, mediumWF, complexWF, effort_days, effort_hours, is_active,qa_taskGroup_id) '
                                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                                    (tsklist['tasklist_id'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWF'], tsklist['mediumWF'], tsklist['complexWF'],
-                                      effort_result_days, effort_result_hrs,tsklist['is_active'], QA_taskGroup_id))
+                                    (tsklist['taskListId'], tsklist['simple'], tsklist['medium'], tsklist['complex'], tsklist['simpleWf'], tsklist['mediumWf'], tsklist['complexWf'],
+                                      effort_result_days, effort_result_hrs,tsklist['isActive'], qaTaskGroupId))
                         app.logger.info('QA_tasklist Data Newly Inserted Successfully By PUT Method')
             con.commit()
             con.close()
