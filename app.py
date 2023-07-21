@@ -113,6 +113,7 @@ def bi_Get_allEst_tables():
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
                                               'biTaskListId', t.bi_tasklist_id, 
+                                              'taskListId',t.tasklist_id, 
                                               'biTaskGroupId',t.BI_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -175,6 +176,7 @@ def bi_Get_ByID_Estimator(BI_estimator_ID):
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
                                               'biTaskListId', t.bi_tasklist_id, 
+                                              'taskListId',t.tasklist_id,
                                               'biTaskGroupId',t.BI_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -743,6 +745,7 @@ def etl_Get_allEst_tables():
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
                                               'etlTaskListId', t.etl_tasklist_id, 
+                                              'taskListId',t.tasklist_id,
                                               'etlTaskGroupId',t.etl_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -806,7 +809,8 @@ def bi_Get_ByID_ETL(etl_estimator_ID):
                                       'etlTaskLists', 
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
-                                              'etlTaskListId', t.etl_tasklist_id, 
+                                              'etlTaskListId', t.etl_tasklist_id,
+                                              'taskListId',t.tasklist_id, 
                                               'etlTaskGroupId',t.etl_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -1290,6 +1294,7 @@ def qa_Get_allEst_tables():
                                     (SELECT JSON_ARRAYAGG(
                                          JSON_OBJECT(
                                               'qaTaskListId', t.qa_tasklist_id, 
+                                              'taskListId',t.tasklist_id,
                                               'qaTaskGroupId',t.qa_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
@@ -1351,7 +1356,8 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
                                       'qaTasksLists', 
                                       (SELECT JSON_ARRAYAGG(
                                           JSON_OBJECT(
-                                              'qaTaskListId', t.qa_tasklist_id, 
+                                              'qaTaskListId', t.qa_tasklist_id,
+                                              'taskListId',t.tasklist_id, 
                                               'qaTaskGroupId',t.qa_taskGroup_id,
                                               'taskName', t2.task_name, 
                                               'simple', t.simple, 
