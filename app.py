@@ -1343,7 +1343,7 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
                               'createdDate',e.created_date,
                               'updatedDate',e.updated_date,
                               'isActive',e.is_active,
-                              'qaTaskgroups', 
+                              'qaTaskGroups', 
                               (SELECT JSON_ARRAYAGG(
                                   JSON_OBJECT(
                                       'qaTaskGroupId', tg.qa_taskGroup_id, 
