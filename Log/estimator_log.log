@@ -16,3 +16,5 @@
 [2023-08-25 10:39:19,070] INFO in _internal: _log : 186 : 127.0.0.1 - - [25/Aug/2023 10:39:19] "[31m[1m\x16\x03\x01\x00å\x01\x00\x00á\x03\x03B9\x09úâW\x166*\x0d\x9aÐoÑÐÝ\x01f\x83K\x043OL\x0b«\x9d\x09\x8c«D\x8a Ú\x9bL© ¶£ëñ±k\x19»Í°3¢cæ%\x0f§æ°Ü\x87ë\x0dö\x1c\x03»\x00$\x13\x01\x13\x02\x13\x03À/À+À0À,Ì©Ì¨À\x09À\x13À[0m" 400 -
 [2023-08-25 10:39:31,198] ERROR in app: wrapped : 106 : Invalid Authentication token!: 'HTTP_AUTHORIZATION'
 [2023-08-25 10:39:31,202] INFO in _internal: _log : 186 : 127.0.0.1 - - [25/Aug/2023 10:39:31] "[31m[1mGET /Bi_EstGetByID/41 HTTP/1.1[0m" 401 -
+[2023-08-25 15:34:57,219] INFO in _internal: _log : 186 :  * Detected change in 'c:\\Users\\intel\\source\\repos\\WebApps\\python\\estimator-api\\app.py', reloading
+[2023-08-25 15:34:57,607] INFO in _internal: _log : 186 :  * Restarting with stat
