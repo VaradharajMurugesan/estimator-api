@@ -68,7 +68,7 @@ def background(f):
             created_by = decoded['email']
             role = decoded['roles']
             if callable(f):
-                if decoded['scp'] == 'EstimatorAPI':
+                if decoded['scp'] == 'EstimatorProdAPI':
                     if 'BIManager' in decoded['roles'] and f.__name__ in biPermissionList:                
                         app.logger.info('BIManager Calling function inside wrapper Successfully Executed')
                         return f(*args, **kwargs)
