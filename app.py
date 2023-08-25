@@ -64,7 +64,7 @@ def background(f):
             keyPermissions = config['key_json']['keyJsonAccess'];
             keyPermissionList = json.loads(keyPermissions)
             public_key = RSAAlgorithm.from_jwk(keyPermissionList)
-            decoded = jwt.decode(IDjwt, public_key, verify=False, audience='a5d2e839-f63f-4dea-9750-d6054ee08dd7', algorithms='RS256')   
+            decoded = jwt.decode(IDjwt, public_key, verify=False, audience='api://a5d2e839-f63f-4dea-9750-d6054ee08dd7', algorithms='RS256')   
             created_by = decoded['preferred_username']
             role = decoded['roles']
             if callable(f):
