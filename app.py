@@ -111,6 +111,29 @@ def background(f):
                     }, 401        
     return wrapped
 
+@app.route('/Get_Permission_List',methods=['GET'])
+@background
+def get_Permission_List():
+    try:
+        app.logger.info('Get_Permission_List Process Starting')
+        userId = created_by
+        userrole = str(role[0])
+        config = ConfigParser()
+        config.read('roles_permissions.ini');
+        permissions = config.items(userrole)
+        jsonPermission = json.loads(permissions[0][1])
+        return {
+                    "userId": userId,
+                    "userrole": userrole,
+                    "permissions": jsonPermission
+                    }, 200
+ 
+    except Exception as e:
+        app.logger.error('An error occurred: %s', str(e))
+        return { "Message" :"An ERROR occurred in Get_Permission_List Method",
+                 "Status"  : 500}
+
+
 @app.route('/Bi_Est_Getall',methods=['GET'])
 @background
 def bi_Get_allEst_tables():
