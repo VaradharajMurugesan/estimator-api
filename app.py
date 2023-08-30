@@ -69,6 +69,9 @@ def background(f):
             role = decoded['roles']
             if callable(f):
                 if decoded['scp'] == 'EstimatorProdAPI':
+                    if f.__name__== 'get_Permission_List':
+                        app.logger.info('get_Permission_List Calling function inside wrapper Successfully Executed')
+                        return f(*args, **kwargs)
                     if 'BIManager' in decoded['roles'] and f.__name__ in biPermissionList:                
                         app.logger.info('BIManager Calling function inside wrapper Successfully Executed')
                         return f(*args, **kwargs)
