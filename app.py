@@ -124,7 +124,7 @@ def get_Permission_List():
         config = ConfigParser()
         config.read('roles_permissions.ini');
         permissions = config.items(userrole)
-        jsonPermission = json.loads(permissions[0][1])
+        jsonPermission = json.loads(permissions[1][1])
         return {
                     "userId": userId,
                     "userrole": userrole,
