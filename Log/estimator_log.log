@@ -32,3 +32,7 @@
 [2023-09-13 19:09:07,629] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
 [2023-09-13 19:09:10,630] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
 [2023-09-13 19:09:10,635] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:09:10] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:17:02,419] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:17:02,420] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:17:05,297] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:17:05,301] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:17:05] "GET /Qa_Est_Getall HTTP/1.1" 200 -
