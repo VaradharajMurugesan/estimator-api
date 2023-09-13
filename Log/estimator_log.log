@@ -78,3 +78,15 @@
 [2023-09-13 19:32:00,580] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
 [2023-09-13 19:32:03,428] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
 [2023-09-13 19:32:03,429] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:32:03] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:47:48,112] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 19:47:48,113] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 19:47:48,115] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 19:47:53,527] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 19:47:53,544] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 19:47:54,010] ERROR in app: wrapped : 109 : Invalid Authentication token!: Signature has expired
+[2023-09-13 19:47:54,011] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:47:54] "[31m[1mGET /Qa_Est_Getall HTTP/1.1[0m" 401 -
+[2023-09-13 19:48:33,437] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:48:33,437] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:48:36,377] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:48:36,381] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:48:36] "GET /Qa_Est_Getall HTTP/1.1" 200 -
