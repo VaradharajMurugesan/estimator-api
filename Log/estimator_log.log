@@ -112,3 +112,25 @@
 [2023-09-13 20:11:39,672] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
 [2023-09-13 20:11:42,538] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
 [2023-09-13 20:11:42,539] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 20:11:42] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 20:24:05,789] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 20:24:05,790] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 20:24:05,792] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 20:24:11,293] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 20:24:11,306] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 20:24:27,616] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 20:24:27,616] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 20:24:30,428] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 20:24:30,429] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 20:24:30] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 20:26:48,886] INFO in _internal: _log : 186 :  * Detected change in 'c:\\Users\\intel\\source\\repos\\WebApps\\python\\estimator-api\\app.py', reloading
+[2023-09-13 20:26:49,010] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 20:27:02,518] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 20:27:02,519] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 20:27:02,521] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 20:27:07,773] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 20:27:07,788] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 20:27:08,300] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 20:27:08,300] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 20:27:11,013] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 20:27:11,022] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 20:27:11] "GET /Qa_Est_Getall HTTP/1.1" 200 -
