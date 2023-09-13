@@ -150,7 +150,7 @@ def bi_Get_allEst_tables():
             if cur.rowcount==0:
                 app.logger.info('Record Not Found for the New user')
                 #return jsonify("Record not found"), 404
-                return {[" "]}, 200
+                return jsonify([])
         cur.execute  (""" SELECT JSON_ARRAYAGG(  
                               JSON_OBJECT(
                               'categoryId',e.category_id,
@@ -222,7 +222,8 @@ def bi_Get_ByID_Estimator(BI_estimator_ID):
             cur.fetchall()
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the New user')
-                  return jsonify("Record not found"), 404 
+                  #return jsonify("Record not found"), 404 
+                  return jsonify([])
         rows = cur.execute("""SELECT JSON_OBJECT(
                                 'categoryId',e.category_id,
                                 'categoryName',c.category_name,
@@ -649,7 +650,8 @@ def etl_Get_allEst_tables():
             cur.fetchall()
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the Specific ETL ID')
-                  return jsonify("Record not found"), 404 
+                  #return jsonify("Record not found"), 404 
+                  return jsonify([])
         cur.execute  (""" SELECT JSON_ARRAYAGG(  
                               JSON_OBJECT(
                               'categoryId',e.category_id,
@@ -722,7 +724,8 @@ def etl_Get_ByID_Estimator(etl_estimator_ID):
             cur.fetchall()
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the Specific ETL ID')
-                  return jsonify("Record not found"), 404
+                  #return jsonify("Record not found"), 404
+                  return jsonify([])
         rows = cur.execute("""SELECT JSON_OBJECT(
                                 'categoryId',e.category_id,
                                 'categoryName',c.category_name,
@@ -1081,8 +1084,7 @@ def qa_Get_allEst_tables():
             cur.fetchall()
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the New user')
-                  #return jsonify("Record not found"), 404
-                  #testing empty records issue
+                  #return jsonify("Record not found"), 404                  
                   return jsonify([])
         cur.execute  (""" SELECT JSON_ARRAYAGG(  
                               JSON_OBJECT(
@@ -1155,7 +1157,8 @@ def qa_Get_ByID_Estimator(qa_estimator_ID):
             cur.fetchall()
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the New user')
-                  return jsonify("Record not found"), 404
+                  #return jsonify("Record not found"), 404
+                  return jsonify([])
         rows = cur.execute("""SELECT JSON_OBJECT(
                                 'categoryId',e.category_id,
                                 'categoryName',c.category_name,

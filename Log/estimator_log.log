@@ -134,3 +134,23 @@
 [2023-09-13 20:27:08,300] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
 [2023-09-13 20:27:11,013] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
 [2023-09-13 20:27:11,022] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 20:27:11] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 21:01:11,107] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 21:01:11,107] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 21:01:11,122] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 21:01:16,540] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 21:01:16,557] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 21:01:20,024] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 21:01:20,024] INFO in app: qa_Get_allEst_tables : 1079 : QA_Get All Process Starting
+[2023-09-13 21:01:22,889] INFO in app: qa_Get_allEst_tables : 1086 : Record Not Found for the New user
+[2023-09-13 21:01:22,890] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 21:01:22] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 21:02:46,610] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 21:02:46,611] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 21:02:46,613] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 21:02:52,019] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 21:02:52,023] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 21:03:09,816] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 21:03:09,817] INFO in app: qa_Get_ByID_Estimator : 1152 : QA_Get_By_ID Process Starting
+[2023-09-13 21:03:12,792] INFO in app: qa_Get_ByID_Estimator : 1159 : Record Not Found for the New user
+[2023-09-13 21:03:12,794] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 21:03:12] "GET /Qa_EstGetByID/32 HTTP/1.1" 200 -
