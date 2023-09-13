@@ -1082,7 +1082,7 @@ def qa_Get_allEst_tables():
             if cur.rowcount==0:
                   app.logger.info('Record Not Found for the New user')
                   #return jsonify("Record not found"), 404
-                  return json.loads('{}')
+                  return json.loads('[]')
         cur.execute  (""" SELECT JSON_ARRAYAGG(  
                               JSON_OBJECT(
                               'categoryId',e.category_id,

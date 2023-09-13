@@ -36,3 +36,39 @@
 [2023-09-13 19:17:02,420] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
 [2023-09-13 19:17:05,297] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
 [2023-09-13 19:17:05,301] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:17:05] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:27:10,126] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 19:27:10,127] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 19:27:10,129] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 19:27:15,768] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 19:27:15,787] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 19:27:15,873] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:27:15,873] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:27:18,803] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:27:18,808] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:27:18] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:30:28,616] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 19:30:28,616] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 19:30:28,618] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 19:30:34,156] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 19:30:34,162] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 19:30:41,195] INFO in _internal: _log : 186 : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-09-13 19:30:41,195] INFO in _internal: _log : 186 : [33mPress CTRL+C to quit[0m
+[2023-09-13 19:30:41,197] INFO in _internal: _log : 186 :  * Restarting with stat
+[2023-09-13 19:30:46,825] WARNING in _internal: _log : 186 :  * Debugger is active!
+[2023-09-13 19:30:46,834] INFO in _internal: _log : 186 :  * Debugger PIN: 105-444-357
+[2023-09-13 19:30:50,407] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:30:50,408] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:30:53,339] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:30:53,342] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:30:53] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:31:09,611] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:31:09,611] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:31:12,592] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:31:12,593] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:31:12] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:31:35,500] INFO in app: wrapped : 82 : QAManager Calling function inside wrapper Successfully Executed
+[2023-09-13 19:31:35,500] INFO in app: qa_Get_allEst_tables : 1076 : QA_Get All Process Starting
+[2023-09-13 19:31:38,486] INFO in app: qa_Get_allEst_tables : 1083 : Record Not Found for the New user
+[2023-09-13 19:31:38,487] INFO in _internal: _log : 186 : 127.0.0.1 - - [13/Sep/2023 19:31:38] "GET /Qa_Est_Getall HTTP/1.1" 200 -
+[2023-09-13 19:31:51,599] INFO in _internal: _log : 186 :  * Detected change in 'c:\\Users\\intel\\source\\repos\\WebApps\\python\\estimator-api\\app.py', reloading
+[2023-09-13 19:31:51,703] INFO in _internal: _log : 186 :  * Restarting with stat
